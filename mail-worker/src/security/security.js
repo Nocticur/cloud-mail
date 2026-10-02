@@ -93,6 +93,11 @@ app.use('*', async (c, next) => {
 
 	const path = c.req.path;
 
+	// Only published appearance GETs are public. PUT and all profile routes keep JWT/KV authentication.
+	if (c.req.method === 'GET' && ['/ui/appearance', '/ui/images/background'].includes(path)) {
+		return await next();
+	}
+
 	const index = exclude.findIndex(item => {
 		return path.startsWith(item);
 	});
